@@ -3,15 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use Illuminate\Http\Request;
+use App\Http\Requests\users\UserCreateRequest;
+use App\Http\Requests\users\UserUpdateRequest;
 use Symfony\Component\HttpFoundation\Response;
 
 class UserController extends Controller
 {
     public function index(){
-        return response()->json([
-            'users' => User::all()
-        ], Response::HTTP_OK);
+        return User::paginate();
     }
 
     public function show($id){
@@ -20,15 +19,13 @@ class UserController extends Controller
         ], Response::HTTP_OK);
     }
 
-    public function store(Request $request){
-        $request->validate([
-            'first_name' => ['required'],
-            'last_name' => ['required'],
-            'email' => ['required', 'email'],
-            'password' => ['required', 'min:4'],
+    public function store(UserCreateRequest $request){
+        $user = User::create([
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'email' => $request->email,
+            'password' => bcrypt('password')
         ]);
-
-        $user = User::create($request->all());
 
         return response()->json([
             'message' => 'User has been created successfully',
@@ -36,11 +33,7 @@ class UserController extends Controller
         ], Response::HTTP_CREATED);
     }
 
-    public function update($id, Request $request){
-
-        $request->validate([
-            'email' => ['unique:users,email,'.$id]
-        ]);
+    public function update($id, UserUpdateRequest $request){
 
         $user = User::findOrFail($id);
         $user->update($request->all());
@@ -50,6 +43,7 @@ class UserController extends Controller
             'user' => $user
         ], Response::HTTP_ACCEPTED);
     }
+    
     public function destroy($id){
         $user = User::findOrFail($id);
         $user->delete();
