@@ -11,22 +11,20 @@ use Symfony\Component\HttpFoundation\Response;
 class UserController extends Controller
 {
     public function index(){
-        return User::paginate();
+        return User::with('role')->paginate();
     }
 
     public function show($id){
         return response()->json([
-            'user' => User::findOrFail($id)
+            'user' => User::with('role')->findOrFail($id)
         ], Response::HTTP_OK);
     }
 
     public function store(UserCreateRequest $request){
-        $user = User::create([
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'email' => $request->email,
-            'password' => bcrypt('password')
-        ]);
+        $user = User::create(
+            $request->only('first_name', 'last_name', 'email', 'role_id')
+            + [ 'password' => bcrypt('password')]
+        );
 
         return response()->json([
             'message' => 'User has been created successfully',
@@ -34,7 +32,7 @@ class UserController extends Controller
         ], Response::HTTP_CREATED);
     }
 
-    public function update($id, UserUpdateRequest $request){
+    public function update(UserUpdateRequest $request, $id){
 
         $user = User::findOrFail($id);
         $user->update($request->all());
