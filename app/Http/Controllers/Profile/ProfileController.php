@@ -7,13 +7,14 @@ use App\Http\Requests\profile\UpdateProfilePasswordRequest;
 use App\Http\Requests\profile\UpdateProfileRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class ProfileController extends Controller
 {
     public function profile(){
         return response()->json([
-            'profile' => auth()->user()
+            'profile' => Auth::check()
         ], Response::HTTP_OK);
     }
 
