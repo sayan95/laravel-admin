@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\profile\UpdateProfilePasswordRequest;
 use App\Http\Requests\profile\UpdateProfileRequest;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class ProfileController extends Controller
