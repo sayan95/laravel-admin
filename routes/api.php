@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Profile\ProfileController;
+use App\Http\Controllers\Authorization\RoleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,9 +37,10 @@ Route::group(['prefix' => 'admin-auth'], function(){
 // authorization (roles, permission) related routes
 Route::middleware('auth:api')->prefix('roles')->group(function(){
     Route::get('/', [RoleController::class, 'index'])->name('roles.all');
-    Route::post('/store', [RoleController::class, 'store'])->name('roles.store');
-    Route::put('/update/{id}', [RoleController::class, 'update'])->name('roles.update');
-    Route::delete('/delete/{id}', [RoleController::class, 'destroy'])->name('roles.destroy');
+    Route::get('view/{id}', [RoleController::class, 'show'])->name('roles.view');
+    Route::post('store', [RoleController::class, 'store'])->name('roles.store');
+    Route::put('update/{id}', [RoleController::class, 'update'])->name('roles.update');
+    Route::delete('delete/{id}', [RoleController::class, 'destroy'])->name('roles.destroy');
 });
 
 // admin profile activity routes
