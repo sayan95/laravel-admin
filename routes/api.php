@@ -1,9 +1,10 @@
 <?php
 
-use App\Http\Controllers\Auth\LoginController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\User\UserController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,6 +24,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::group(['prefix' => 'admin-auth'], function(){
     Route::post('login', [LoginController::class, 'login'])->name('admin.login');
+    Route::post('register', [RegisterController::class, 'register'])->name('admin.register');
 });
 
 
