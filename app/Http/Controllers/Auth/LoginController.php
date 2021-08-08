@@ -13,13 +13,11 @@ class LoginController extends Controller
         if(Auth::attempt($request->only('email', 'password'))){
             $user = Auth::user();
             
-            if(!$access_token = $request->cookie('access_token')){
-                $token = $user->createToken('admin')->accessToken;
-                $access_token = cookie('access_token', $token, 60);
-            }
+            $token = $user->createToken('admin')->accessToken;
+            $access_token = cookie('access_token', $token, 60);
 
             return response()->json([
-                'token' => $access_token,
+                'token' => $token,
             ], Response::HTTP_OK)->withCookie($access_token);
         }
 
