@@ -1,8 +1,11 @@
 <?php
 
-use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\User\UserController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Profile\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,10 +22,22 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::group(['prefix' => 'users'], function(){
+
+Route::group(['prefix' => 'admin-auth'], function(){
+    Route::post('login', [LoginController::class, 'login'])->name('admin.login');
+    Route::post('register', [RegisterController::class, 'register'])->name('admin.register');
+});
+
+
+
+Route::group(['middleware' => 'auth:api', 'prefix' => 'users'], function(){
     Route::get('/', [UserController::class, 'index'])->name('user.all');
     Route::get('/{id}', [UserController::class, 'show'])->name('user');
     Route::post('/store', [UserController::class, 'store'])->name('user.store');
     Route::put('/update/{id}', [UserController::class, 'update'])->name('user.update');
     Route::delete('/delete/{id}', [UserController::class, 'destroy'])->name('user.destroy');
+
+    Route::get('profile', [ProfileController::class, 'profile'])->name('admin.profile');
+    Route::put('profile/info', [ProfileController::class, 'updateProfile'])->name('admin.profile');
+    Route::put('profile/password', [ProfileController::class, 'updatePassword'])->name('admin.password');
 });
