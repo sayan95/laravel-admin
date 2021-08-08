@@ -34,6 +34,16 @@ Route::group(['prefix' => 'admin-auth'], function(){
 });
 
 
+Route::middleware('auth:api')->group(function(){
+    // Route::prefix('roles')->group(function(){
+    //     Route::get('/', [RoleController::class, 'index'])->name('roles.all');
+    //     Route::post('/store', [RoleController::class, 'store'])->name('roles.store');
+    //     Route::put('/update/{id}', [RoleController::class, 'update'])->name('roles.update');
+    //     Route::delete('/delete/{id}', [RoleController::class, 'destroy'])->name('roles.destroy');
+    // })
+});
+
+
 
 Route::group(['middleware' => 'auth:api', 'prefix' => 'users'], function(){
     Route::get('/', [UserController::class, 'index'])->name('user.all');
