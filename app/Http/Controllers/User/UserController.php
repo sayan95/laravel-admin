@@ -6,17 +6,20 @@ use App\Models\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\users\UserCreateRequest;
 use App\Http\Requests\users\UserUpdateRequest;
+use App\Http\Resources\UserResource;
 use Symfony\Component\HttpFoundation\Response;
 
 class UserController extends Controller
 {
     public function index(){
-        return User::with('role')->paginate();
+        return response()->json([
+            'users' => UserResource::collection(User::with('role')->paginate())
+        ], Response::HTTP_OK);
     }
 
     public function show($id){
         return response()->json([
-            'user' => User::with('role')->findOrFail($id)
+            'user' => new UserResource(User::with('role')->findOrFail($id))
         ], Response::HTTP_OK);
     }
 
@@ -49,7 +52,6 @@ class UserController extends Controller
 
         return response()->json([
             'message' => 'user has been deleted successfully',
-            'user' => null
         ], Response::HTTP_OK);
     }
 }

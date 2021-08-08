@@ -5,13 +5,14 @@ namespace App\Http\Controllers\Authorization;
 use App\Models\Role;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\RoleResource;
 use Symfony\Component\HttpFoundation\Response;
 
 class RoleController extends Controller
 {
     public function index(){
         return response()->json([
-            'roles' => Role::all()
+            'roles' => RoleResource::collection(Role::paginate())
         ], Response::HTTP_OK);
     }
 
@@ -19,7 +20,7 @@ class RoleController extends Controller
         $role = Role::findOrFail($id);
         
         return response()->json([
-            'role' => $role
+            'role' => new RoleResource($role)
         ], response::HTTP_OK);
     }
 
@@ -32,7 +33,7 @@ class RoleController extends Controller
 
         return response()->json([
             'message' => 'Role '.$role->name.' has been creted successfully',
-            'role' => $role
+            'role' => new RoleResource($role)
         ], Response::HTTP_CREATED);
     }
 
@@ -46,7 +47,7 @@ class RoleController extends Controller
 
         return response()->json([
             'message' => 'Role has been updated successfully',
-            'role' => $role
+            'role' => new RoleResource($role)
         ], Response::HTTP_ACCEPTED);
     }
 
