@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\User;
 
 use App\Models\User;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\users\UserCreateRequest;
 use App\Http\Requests\users\UserUpdateRequest;
 use Symfony\Component\HttpFoundation\Response;
