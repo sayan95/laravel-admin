@@ -6,6 +6,7 @@ use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Product\ProductController;
 use App\Http\Controllers\Profile\ProfileController;
 use App\Http\Controllers\Authorization\RoleController;
 
@@ -58,4 +59,13 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'users'], function(){
     Route::post('/store', [UserController::class, 'store'])->name('user.store');
     Route::put('/update/{id}', [UserController::class, 'update'])->name('user.update');
     Route::delete('/delete/{id}', [UserController::class, 'destroy'])->name('user.destroy');
+});
+
+// product management routes
+Route::middleware('auth:api')->prefix('products')->group(function(){
+    Route::get('/', [ProductController::class, 'index'])->name('product.all');
+    Route::get('/{id}', [ProductController::class, 'show'])->name('product');
+    Route::post('/store', [ProductController::class, 'store'])->name('product.store');
+    Route::put('/update/{id}', [ProductController::class, 'update'])->name('product.update');
+    Route::delete('/delete/{id}', [ProductController::class, 'destroy'])->name('product.destroy');
 });
