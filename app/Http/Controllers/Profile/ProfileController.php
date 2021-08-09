@@ -29,6 +29,7 @@ class ProfileController extends Controller
 
     public function updatePassword(UpdateProfilePasswordRequest $request){
         $user = User::findOrFail(auth()->id());
+        
         $user->update([
             'password' => $request->password
         ]);
