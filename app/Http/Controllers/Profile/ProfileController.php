@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Profile;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\profile\UpdateProfilePasswordRequest;
-use App\Http\Requests\profile\UpdateProfileRequest;
 use App\Models\User;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
 use Symfony\Component\HttpFoundation\Response;
+use App\Http\Requests\profile\UpdateProfileRequest;
+use App\Http\Requests\profile\UpdateProfilePasswordRequest;
 
 class ProfileController extends Controller
 {
@@ -22,12 +23,13 @@ class ProfileController extends Controller
 
         return response()->json([   
             'message' => 'Profile info has been updated successfully.',
-            'user' => $user
+            'user' => new UserResource($user)
         ], Response::HTTP_ACCEPTED);
     }
 
     public function updatePassword(UpdateProfilePasswordRequest $request){
         $user = User::findOrFail(auth()->id());
+        
         $user->update([
             'password' => $request->password
         ]);

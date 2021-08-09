@@ -13,7 +13,9 @@ class RegisterController extends Controller
     public function register(RegisterRequest $request){
         $user = User::create(
             $request->only('first_name', 'last_name', 'email')
-            + ['password' => bcrypt($request->password)]
+            + ['password' => bcrypt($request->password),
+                'role_id' => 3
+            ]
         );
 
         return response()->json([

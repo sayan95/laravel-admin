@@ -6,7 +6,10 @@ use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Product\ProductController;
 use App\Http\Controllers\Profile\ProfileController;
+use App\Http\Controllers\Authorization\RoleController;
+use App\Http\Controllers\Product\ProductImageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,13 +37,12 @@ Route::group(['prefix' => 'admin-auth'], function(){
 });
 
 // authorization (roles, permission) related routes
-Route::middleware('auth:api')->group(function(){
-    // Route::prefix('roles')->group(function(){
-    //     Route::get('/', [RoleController::class, 'index'])->name('roles.all');
-    //     Route::post('/store', [RoleController::class, 'store'])->name('roles.store');
-    //     Route::put('/update/{id}', [RoleController::class, 'update'])->name('roles.update');
-    //     Route::delete('/delete/{id}', [RoleController::class, 'destroy'])->name('roles.destroy');
-    // });
+Route::middleware('auth:api')->prefix('roles')->group(function(){
+    Route::get('/', [RoleController::class, 'index'])->name('roles.all');
+    Route::get('view/{id}', [RoleController::class, 'show'])->name('roles.view');
+    Route::post('store', [RoleController::class, 'store'])->name('roles.store');
+    Route::put('update/{id}', [RoleController::class, 'update'])->name('roles.update');
+    Route::delete('delete/{id}', [RoleController::class, 'destroy'])->name('roles.destroy');
 });
 
 // admin profile activity routes
@@ -58,4 +60,14 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'users'], function(){
     Route::post('/store', [UserController::class, 'store'])->name('user.store');
     Route::put('/update/{id}', [UserController::class, 'update'])->name('user.update');
     Route::delete('/delete/{id}', [UserController::class, 'destroy'])->name('user.destroy');
+});
+
+// product management routes
+Route::middleware('auth:api')->prefix('products')->group(function(){
+    Route::get('/', [ProductController::class, 'index'])->name('product.all');
+    Route::get('/{id}', [ProductController::class, 'show'])->name('product');
+    Route::post('/store', [ProductController::class, 'store'])->name('product.store');
+    Route::put('/update/{id}', [ProductController::class, 'update'])->name('product.update');
+    Route::delete('/delete/{id}', [ProductController::class, 'destroy'])->name('product.destroy');
+    Route::post('image/upload', [ProductImageController::class, 'upload'])->name('product.image.upload');
 });
