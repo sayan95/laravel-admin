@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Product\ProductController;
 use App\Http\Controllers\Profile\ProfileController;
 use App\Http\Controllers\Authorization\RoleController;
+use App\Http\Controllers\Product\ProductImageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -68,4 +69,5 @@ Route::middleware('auth:api')->prefix('products')->group(function(){
     Route::post('/store', [ProductController::class, 'store'])->name('product.store');
     Route::put('/update/{id}', [ProductController::class, 'update'])->name('product.update');
     Route::delete('/delete/{id}', [ProductController::class, 'destroy'])->name('product.destroy');
+    Route::post('image/upload', [ProductImageController::class, 'upload'])->name('product.image.upload');
 });
