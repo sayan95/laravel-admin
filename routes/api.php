@@ -75,6 +75,7 @@ Route::middleware('auth:api')->prefix('products')->group(function(){
 
 // order management routes
 Route::middleware('auth:api')->prefix('orders')->group(function () {
+    Route::get('export', [OrderController::class, 'export'])->name('order.export');
     Route::get('/', [OrderController::class, 'index'])->name('order.all');
     Route::get('/{id}', [OrderController::class, 'show'])->name('order');
 });
