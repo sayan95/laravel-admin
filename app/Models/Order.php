@@ -15,4 +15,10 @@ class Order extends Model
     public function items(){
         return $this->hasMany(OrderItem::class);
     }
+
+    public function getTotalAttribute(){
+        return $this->items->sum(function(OrderItem $item){
+            return $item->price * $item->quantity;
+        });
+    }
 }
