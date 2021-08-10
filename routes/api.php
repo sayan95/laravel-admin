@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
+use App\Http\Controllers\Order\OrderController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Product\ProductController;
 use App\Http\Controllers\Profile\ProfileController;
@@ -70,4 +71,10 @@ Route::middleware('auth:api')->prefix('products')->group(function(){
     Route::put('/update/{id}', [ProductController::class, 'update'])->name('product.update');
     Route::delete('/delete/{id}', [ProductController::class, 'destroy'])->name('product.destroy');
     Route::post('image/upload', [ProductImageController::class, 'upload'])->name('product.image.upload');
+});
+
+// order management routes
+Route::middleware('auth:api')->prefix('orders')->group(function () {
+    Route::get('/', [OrderController::class, 'index'])->name('order.all');
+    Route::get('/{id}', [OrderController::class, 'show'])->name('order');
 });
