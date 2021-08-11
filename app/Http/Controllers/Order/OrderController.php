@@ -6,11 +6,14 @@ use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Gate;
 use App\Http\Resources\OrderResource;
 
 class OrderController extends Controller
 {
     public function index(){
+        Gate::authorize('view', 'orders');
+
         $orders = Order::with('items')->paginate();
 
         return response()->json([
@@ -19,6 +22,8 @@ class OrderController extends Controller
     }
 
     public function show($id){
+        Gate::authorize('view', 'orders');
+
         $order = Order::with('items')->findOrFail($id);
 
         return response()->json([
@@ -27,6 +32,8 @@ class OrderController extends Controller
     }
 
     public function export(){
+        Gate::authorize('view', 'orders');
+        
         $headers = [
             "Content-type" => "text/csv",
             "Content-Disposition" => "attachment; filename=orders.csv",

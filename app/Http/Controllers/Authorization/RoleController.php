@@ -6,17 +6,22 @@ use App\Models\Role;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\RoleResource;
+use Illuminate\Support\Facades\Gate;
 use Symfony\Component\HttpFoundation\Response;
 
 class RoleController extends Controller
 {
     public function index(){
+        Gate::authorize('view', 'roles');
+
         return response()->json([
             'roles' => RoleResource::collection(Role::with('permissions')->paginate())
         ], Response::HTTP_OK);
     }
 
     public function show($id){
+        Gate::authorize('view', 'roles');
+
         $role = Role::findOrFail($id);
         
         return response()->json([
@@ -25,6 +30,8 @@ class RoleController extends Controller
     }
 
     public function store(Request $request){
+        Gate::authorize('edit', 'roles');
+
         $request ->validate([
             'name' => ['required', 'unique:roles,name']
         ]);
@@ -44,6 +51,8 @@ class RoleController extends Controller
     }
 
     public function update($id, Request $request){
+        Gate::authorize('edit', 'roles');
+
         $request->validate([
             'name' => ['unique:roles,name,'.$id]
         ]);
@@ -64,6 +73,8 @@ class RoleController extends Controller
     }
 
     public function destroy($id){
+        Gate::authorize('edit', 'roles');
+
         $role = Role::findOrFail($id);
         $role->permissions()->detach($role->permissions);
         
