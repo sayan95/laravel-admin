@@ -12,7 +12,7 @@ class RoleController extends Controller
 {
     public function index(){
         return response()->json([
-            'roles' => RoleResource::collection(Role::paginate())
+            'roles' => RoleResource::collection(Role::with('permissions')->paginate())
         ], Response::HTTP_OK);
     }
 
@@ -31,28 +31,42 @@ class RoleController extends Controller
 
         $role = Role::create($request->all());
 
+        if($permissions = $request->permissions){
+            foreach($permissions as $permission){
+                $role->permissions()->attach($permission);
+            }
+        }    
+
         return response()->json([
             'message' => 'Role '.$role->name.' has been creted successfully',
-            'role' => new RoleResource($role)
+            'role' => new RoleResource(Role::with('permissions')->findOrFail($role->id))
         ], Response::HTTP_CREATED);
     }
 
     public function update($id, Request $request){
         $request->validate([
-            'name' => ['required', 'unique:roles,name,'.$id]
+            'name' => ['unique:roles,name,'.$id]
         ]);
 
         $role = Role::findOrFail($id);
         $role->update($request->only('name'));
 
+        if($permissions = $request->permissions)
+            $role->permissions()->sync($permissions);
+        else
+            $role->permissions()->sync([]);
+        
+
         return response()->json([
             'message' => 'Role has been updated successfully',
-            'role' => new RoleResource($role)
+            'role' => new RoleResource(Role::with('permissions')->findOrFail($role->id))
         ], Response::HTTP_ACCEPTED);
     }
 
     public function destroy($id){
         $role = Role::findOrFail($id);
+        $role->permissions()->detach($role->permissions);
+        
         $role_name = $role->name;
         $role->delete();
 

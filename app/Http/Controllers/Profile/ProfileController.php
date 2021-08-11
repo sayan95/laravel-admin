@@ -12,9 +12,11 @@ use App\Http\Requests\profile\UpdateProfilePasswordRequest;
 class ProfileController extends Controller
 {
     public function profile(){
-        return response()->json([
-            'profile' => auth()->user()
-        ], Response::HTTP_OK);
+        $user = User::with('role')->findOrFail(auth()->user()->id);
+        
+        return (new UserResource($user))->additional([
+            'permissions' => $user->permissions()
+        ]);
     }
 
     public function updateProfile(UpdateProfileRequest $request){

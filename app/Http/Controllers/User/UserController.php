@@ -31,7 +31,7 @@ class UserController extends Controller
 
         return response()->json([
             'message' => 'User has been created successfully',
-            'user' => $user
+            'user' => new UserResource(User::with('role')->findOrFail($user->id))
         ], Response::HTTP_CREATED);
     }
 
@@ -42,7 +42,7 @@ class UserController extends Controller
 
         return response()->json([
             'message' => 'user has been updated successfully',
-            'user' => $user
+            'user' => new UserResource(User::with('role')->findOrFail($user->id))
         ], Response::HTTP_ACCEPTED);
     }
     

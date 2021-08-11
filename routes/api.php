@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Order\OrderController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Authorization\PermissionController;
 use App\Http\Controllers\Product\ProductController;
 use App\Http\Controllers\Profile\ProfileController;
 use App\Http\Controllers\Authorization\RoleController;
@@ -44,6 +45,7 @@ Route::middleware('auth:api')->prefix('roles')->group(function(){
     Route::post('store', [RoleController::class, 'store'])->name('roles.store');
     Route::put('update/{id}', [RoleController::class, 'update'])->name('roles.update');
     Route::delete('delete/{id}', [RoleController::class, 'destroy'])->name('roles.destroy');
+    Route::get('permissions', [PermissionController::class, 'index'])->name('permission.all');
 });
 
 // admin profile activity routes
