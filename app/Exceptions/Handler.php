@@ -2,11 +2,13 @@
 
 namespace App\Exceptions;
 
-use Illuminate\Auth\AuthenticationException;
-use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Throwable;
+use Illuminate\Http\Request;
+use Illuminate\Auth\AuthenticationException;
+use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -44,8 +46,20 @@ class Handler extends ExceptionHandler
         $this->renderable(function(Throwable $e, Request $request){
             if($e instanceof AuthenticationException && $request->expectsJson()){
                 return response()->json([
-                    "message" => 'Sorry, you are not authorized to access this resource'
+                    "error" => 'Sorry, you are not authorized to access this resource'
                 ], Response::HTTP_UNAUTHORIZED);
+            }
+
+            if($e instanceof AccessDeniedHttpException && $request->expectsJson()){
+                return response()->json([
+                    'error' => 'This action is unauthorized'
+                ], Response::HTTP_FORBIDDEN);
+            }
+
+            if($e instanceof NotFoundHttpException && $request->expectsJson()){
+                return response()->json([
+                    'error' => 'Oops! Nothing was found'
+                ], Response::HTTP_NOT_FOUND);
             }
         }); 
     }
