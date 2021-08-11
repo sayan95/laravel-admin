@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\users;
 
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UserUpdateRequest extends FormRequest
@@ -13,7 +14,7 @@ class UserUpdateRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return Gate::allows('edit', 'users');
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\product;
 
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ProductUpdateRequest extends FormRequest
@@ -13,7 +14,7 @@ class ProductUpdateRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return Gate::allows('edit', 'products');
     }
 
     /**
