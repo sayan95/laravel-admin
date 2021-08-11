@@ -6,6 +6,7 @@ use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -46,6 +47,12 @@ class Handler extends ExceptionHandler
                 return response()->json([
                     "message" => 'Sorry, you are not authorized to access this resource'
                 ], Response::HTTP_UNAUTHORIZED);
+            }
+
+            if($e instanceof AccessDeniedHttpException && $request->expectsJson()){
+                return response()->json([
+                    'message' => 'This action is unauthorized'
+                ], Response::HTTP_FORBIDDEN);
             }
         }); 
     }
